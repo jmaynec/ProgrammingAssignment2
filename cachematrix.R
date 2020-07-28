@@ -1,15 +1,37 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Este codigo contiene dos funciones que permiten mejorar
+## el rendimiento en el calculo de una matriz inversa, para matrices grandes
+## el tiempo de procesamiento se ve reducido debido a que el resultado se 
+## almacena temporalmente para mejorar los tiempos.
 
-## Write a short comment describing this function
+## Funcion que obtiene una matriz inversa, si el resultado ya existe
+## obtiene el resultado desde la cache
 
 makeCacheMatrix <- function(x = matrix()) {
-
+  m <- NULL
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+  get <- function() x
+  setinverse <- function(inverse) m <<- inverse
+  getinverse <- function() m
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## Funcion que cachea el resultado de una matriz invertida
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+  m <- x$getinverse()
+  if(!is.null(m)) {
+    message("getting cached data")
+    return(m)
+  }
+  data <- x$get()
+  m <- solve(data)
+  x$setinverse(m)
+  m
 }
